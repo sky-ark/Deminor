@@ -4,7 +4,8 @@ using Random = UnityEngine.Random;
 
 public class BoardManager : MonoBehaviour
 {
-    public GameObject CasePrefab;
+   // public GameObject CasePrefab;
+    public GameObject GridLayoutGroup;
     public GameObject NeigborCasePrefab;
     public GameObject CaseWithBombPrefab;
     public Transform GridParent;
@@ -20,6 +21,7 @@ public class BoardManager : MonoBehaviour
     private void Awake()
     {
         Board = new int[MaxColumns, MaxRows];
+        GridLayoutGroup.GetComponent<UnityEngine.UI.GridLayoutGroup>().constraintCount = MaxRows;
     }
 
     void Start()
@@ -43,13 +45,23 @@ public class BoardManager : MonoBehaviour
         {
             for (int j = 0; j < Board.GetLength(1); j++)
             {
-                if (Board[i, j] == 0)  Instantiate(CasePrefab, GridParent);
-                if (Board[i, j] == -1) Instantiate(CaseWithBombPrefab, GridParent);
-                if (Board[i, j] > 0)
+                //if (Board[i, j] == 0)  Instantiate(CasePrefab, GridParent);
+                if (Board[i, j] == -1)
+                {
+                   GameObject CaseWithBomb = Instantiate(CaseWithBombPrefab, GridParent);
+                   CaseWithBomb.GetComponent<CaseHandler>().isBomb = true;
+                   CaseWithBomb.GetComponent<CaseHandler>().matrixX = i;
+                   CaseWithBomb.GetComponent<CaseHandler>().matrixY = j;
+                    
+                }
+                if (Board[i, j] >= 0)
                 {
                    GameObject neighborCase = Instantiate(NeigborCasePrefab, GridParent);
                    //neighborCase.GetComponentInChildren<TMP_Text>().text = $"i:{i}, j:{j}";
-                   neighborCase.GetComponentInChildren<TMP_Text>().text = Board[i, j].ToString();
+                   //neighborCase.GetComponentInChildren<TMP_Text>().text = Board[i, j].ToString();
+                   neighborCase.GetComponent<CaseHandler>().neighboringBombs = Board[i, j];
+                   neighborCase.GetComponent<CaseHandler>().matrixX = i;
+                   neighborCase.GetComponent<CaseHandler>().matrixY = j;
                 }
             }
         }
@@ -98,7 +110,24 @@ public class BoardManager : MonoBehaviour
         if (i >= Board.GetLength(0) || j >= Board.GetLength(1)) return false;
 
         return true;
-    } 
+    }
+
+    public void CheckNoNeighbors(int i, int j)
+    {
+        for (int k = i - 1; k <= i + 1; k++)
+        {
+            for (int l = j - 1; l <= j + 1; l++)
+            {
+                if (k == i && l == j) continue;
+                
+                if (IsAccessible(k,l) && !HasBombInside(k,l) && !GridParent.GetChild(k * MaxRows + l).GetComponent<CaseHandler>().isRevealed && Board[k, l] == 0)
+                {
+                    GameObject caseToReveal = GridParent.GetChild(k * MaxRows + l).gameObject;
+                    caseToReveal.GetComponent<CaseHandler>().Reveal();
+                }
+            }
+        }
+    }
     
     // Update is called once per frame
     void Update()

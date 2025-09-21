@@ -186,10 +186,10 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 1
-  m_CellSize: {x: 200, y: 200}
+  m_CellSize: {x: 100, y: 100}
   m_Spacing: {x: 1, y: 1}
   m_Constraint: 2
   m_ConstraintCount: 9
@@ -205,12 +205,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae136a2f100328e49b434f83283aa288, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardManager
-  CasePrefab: {fileID: 906890724800686311, guid: b363599ccde5dd040ba164034e1d1745, type: 3}
+  GridLayoutGroup: {fileID: 427317820}
   NeigborCasePrefab: {fileID: 906890724800686311, guid: 8276a64bc3dbc614486fb5c53b57f5b8, type: 3}
   CaseWithBombPrefab: {fileID: 906890724800686311, guid: a4e558b70af3c99429cabe0439496d40, type: 3}
   GridParent: {fileID: 427317821}
-  MaxColumns: 5
-  MaxRows: 9
+  MaxColumns: 10
+  MaxRows: 20
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
